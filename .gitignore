@@ -131,3 +131,9 @@ dmypy.json
 # so of mine own stuff
 .mat
 .DS_Store
+matlab/emnist-mnist.mat
+matlab/emnist-balanced.mat
+matlab/emnist-byclass.mat
+matlab/emnist-bymerge.mat
+matlab/emnist-digits.mat
+matlab/emnist-letters.mat
