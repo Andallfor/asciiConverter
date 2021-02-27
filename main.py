@@ -6,9 +6,9 @@ import os
 import unloader
 
 def main():
-    # append file given with real path
-    # realpath/matlab/givenFile
     u = unloader.ai()
+    ai = u.model
+    print("loaded ai")
 
 if __name__ == "__main__":
     main()

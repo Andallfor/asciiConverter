@@ -5,9 +5,20 @@ import scipy.io as si
 import sys
 import numpy as np
 import emnist
+import os
 
 class ai():
     def __init__(self):
+        print(os.path.dirname(os.path.abspath(__file__)) + os.sep + "saved_model.pb")
+        if os.path.exists(os.path.dirname(os.path.abspath(__file__)) + os.sep + "saved_model.pb"):
+            # retrieve ai
+            self.model = tf.keras.models.load_model(os.path.dirname(os.path.abspath(__file__)) + os.sep)
+            print("found previous ai")
+        else:
+            # generate ai
+            self.generate()
+    
+    def generate(self):
         self.trainImages, self.traingLabels = emnist.extract_training_samples('balanced')
         self.testImages, self.testLabels = emnist.extract_test_samples('balanced')
 
@@ -19,12 +30,6 @@ class ai():
             self.trainImages.shape[0], self.trainImages.shape[1], self.trainImages.shape[2], 1)
         self.testImages = self.testImages.reshape(
             self.testImages.shape[0], self.testImages.shape[1], self.testImages.shape[2], 1)
-            
-        print(self.trainImages.shape)
-        print(self.traingLabels.shape)
-        print(self.testImages.shape)
-        print(self.testLabels.shape)
-
 
         self.model = tf.keras.models.Sequential([
             tf.keras.layers.Conv2D(
@@ -49,3 +54,5 @@ class ai():
 
         self.model.fit(self.trainImages, self.traingLabels, epochs=7)
         self.model.evaluate(self.testImages,  self.testLabels, verbose=2)
+
+        self.model.save(os.path.dirname(os.path.abspath(__file__)))
