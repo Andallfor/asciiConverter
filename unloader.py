@@ -10,10 +10,10 @@ import image
 
 class ai():
     def __init__(self):
-        print(os.path.dirname(os.path.abspath(__file__)) + os.sep + "saved_model.pb")
-        if os.path.exists(os.path.dirname(os.path.abspath(__file__)) + os.sep + "saved_model.pb"):
+        print(os.path.dirname(os.path.abspath(__file__)) + os.sep + "model.h5")
+        if os.path.exists(os.path.dirname(os.path.abspath(__file__)) + os.sep + "model.h5"):
             # retrieve ai
-            self.model = tf.keras.models.load_model(os.path.dirname(os.path.abspath(__file__)) + os.sep)
+            self.model = tf.keras.models.load_model(os.path.dirname(os.path.abspath(__file__)) + os.sep + "model.h5")
             print("found previous ai")
         else:
             # generate ai
@@ -38,18 +38,16 @@ class ai():
 
         self.model = tf.keras.models.Sequential([
             tf.keras.layers.Conv2D(
-                80, (3, 3), activation="relu", input_shape=(28, 28, 1)),
+                48, (3, 3), activation="relu", input_shape=(28, 28, 1)),
 
             tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
                 
             tf.keras.layers.Flatten(),
 
-            tf.keras.layers.Dense(160, activation="relu"),
-            tf.keras.layers.Dropout(0.25),
-            tf.keras.layers.Dense(160, activation="relu"),
+            tf.keras.layers.Dense(96, activation="relu"),
             tf.keras.layers.Dropout(0.25),
 
-            tf.keras.layers.Dense(47, activation="softmax")
+            tf.keras.layers.Dense(62, activation="softmax")
         ])
 
         self.model.compile(
@@ -78,11 +76,26 @@ class ai():
         sizeX = int(img.shape[0] / 28)
         sizeY = int(img.shape[1] / 28)
 
+        if sizeX == 1 or sizeY == 1:
+            sys.exit("Image too small")
+
         returnArray = [[] for i in range(sizeX)]
 
-        for x in range(0, sizeX * 27, 28):
-            for y in range(0, sizeY * 27, 28):
+        # loop for each [28, 28] section
+        for x in range(0, sizeX * 28, 28):
+            for y in range(0, sizeY * 28, 28):
                 s = img[x : x + 28, y : y + 28]
+                s = np.array(s, dtype = float)
                 returnArray[int(x/28)].append(s)
+
+                # change data of each pixel
+                # unloads as 0 - 255
+                # invert and then normalize 0 - 1.0
+                for _x in range(28):
+                    for _y in range(28):
+                        pixel = s[_x][_y]
+                        pixel = abs(pixel - 255.0) # invert
+                        pixel = float(float(pixel) / float(255.0)) # normalize
+                        s[_x][_y] = float(pixel)
 
         return sizeX, sizeY, returnArray

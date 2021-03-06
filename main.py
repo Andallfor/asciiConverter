@@ -5,8 +5,9 @@ import sys
 import os
 import unloader
 import numpy as np
+import emnist
 
-labelKey = [1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'z', 'y', 'z',]
+labelKey = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'z', 'y', 'z','A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
 def main():
     if (len(sys.argv) != 2):
@@ -22,9 +23,15 @@ def main():
     for x in range(sizeX):
         line = ""
         for y in range(sizeY):
-            prediction = ai.predict(np.reshape(imgs[x][y], (1, 28, 28, 1))).argmax()
-            if (prediction is not None):
-                line += labelKey[prediction]
+            p = ai.predict(imgs[x][y].reshape((1, 28, 28, 1)))
+            prediction = p.argmax()
+            
+            # L is the default value so uh
+            # blame the dataset not having blank spaces as a training test
+            # not me
+            # shhhhhhhh
+            if (labelKey[prediction] is not 'L'):
+                line += str(labelKey[prediction])
             else:
                 line += " "
         print(line)
