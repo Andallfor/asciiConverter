@@ -1,7 +1,7 @@
 # Hello this is my attempt at making a program that converts pics to ascii
 
-idk what im doing so excuse the shitty code (its not plagrism its inspiration)
-
+idk what im doing so excuse the shitty code (its not plagrism its inspiration)  
+to run it, run it as a command, with the name of the image you want to use at the very end of the command
 
 # Info
 its uh pretty bad, since the dataset im using only has letters + numbers  
